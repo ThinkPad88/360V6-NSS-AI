@@ -1,7 +1,3 @@
-concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
-
 name: 360V6 OpenWRT NSS Firmware Build
 
 on:
@@ -9,6 +5,10 @@ on:
   push:
     branches:
       - main
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   # NSS source (LibWrt 25.12 branch, full NSS support)
@@ -125,7 +125,10 @@ jobs:
           cd $OPENWRT_PATH
           echo "=== start compile ==="
           echo "CPU cores: $(nproc)"
-          make -j$(nproc) || make -j1 V=s
+          # 1) tools stage: parallel with serial retry (logs visible on hang)
+          timeout 5400 make -j$(nproc) tools/compile || { echo "tools parallel failed, retry serial"; timeout 5400 make -j1 V=s tools/compile || true; }
+          # 2) full build: parallel with serial retry
+          timeout 9000 make -j$(nproc) || { echo "build failed, retry serial"; timeout 9000 make -j1 V=s; }
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Check disk space
