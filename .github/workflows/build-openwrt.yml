@@ -1,3 +1,7 @@
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 name: 360V6 OpenWRT NSS Firmware Build
 
 on:
