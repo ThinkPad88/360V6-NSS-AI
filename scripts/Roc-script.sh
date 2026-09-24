@@ -3,6 +3,7 @@
 # 360V6 (qihoo_360v6) 精简固件 自定义编译脚本
 # 源码: laipeng668/openwrt-6.x 25.12-nss 分支 (6.12内核, LibWrt/Kwrt NSS同源体系)
 # 保留: LuCI管理界面 + NSS加速(ECM) + OpenClash + IPv6 + Aurora主题 + 系统仪表盘
+# 第四版: 保留 Samba4共享 + aria2/AriaNG下载 + amule电驴 + USB U盘挂载
 # 吸收 Kwrt diy.sh: 清理 shortcut-fe(与NSS ECM冲突) + wpad-mbedtls
 # ============================================================
 
@@ -45,11 +46,9 @@ rm -rf feeds/packages/net/open-app-filter 2>/dev/null || true
 rm -rf package/OpenAppFilter 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-diskman 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-hd-idle 2>/dev/null || true
-rm -rf feeds/luci/applications/luci-app-samba4 2>/dev/null || true
+# 保留: luci-app-samba4（局域网共享）、luci-app-aria2 + ariang（下载）
 rm -rf feeds/luci/applications/luci-app-wol 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-vlmcsd 2>/dev/null || true
-rm -rf feeds/luci/applications/luci-app-aria2 2>/dev/null || true
-rm -rf feeds/packages/net/ariang 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-autoreboot 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-wifischedule 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-banip 2>/dev/null || true
