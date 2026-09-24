@@ -1,8 +1,9 @@
 #!/bin/bash
 # ============================================================
 # 360V6 (qihoo_360v6) 精简固件 自定义编译脚本
-# 源码: laipeng668/openwrt-6.x  25.12-nss 分支 (6.12内核)
-# 保留: LuCI管理界面 + NSS加速 + OpenClash + IPv6 + Aurora主题 + 系统仪表盘
+# 源码: laipeng668/openwrt-6.x 25.12-nss 分支 (6.12内核, LibWrt/Kwrt NSS同源体系)
+# 保留: LuCI管理界面 + NSS加速(ECM) + OpenClash + IPv6 + Aurora主题 + 系统仪表盘
+# 吸收 Kwrt diy.sh: 清理 shortcut-fe(与NSS ECM冲突) + wpad-mbedtls
 # ============================================================
 
 set -e
@@ -63,6 +64,13 @@ rm -rf package/luci-app-lucky 2>/dev/null || true
 rm -rf package/openlist2 2>/dev/null || true
 rm -rf package/luci-app-gecoosac 2>/dev/null || true
 rm -rf package/luci-app-athena-led 2>/dev/null || true
+
+# --- 3.5 NSS 冲突清理（吸收 kiddin9/Kwrt diy.sh）---
+# shortcut-fe 是软件快速路径，与高通 NSS ECM 硬件快速路径冲突，必须移除
+rm -rf feeds/kiddin9/shortcut-fe 2>/dev/null || true
+rm -rf package/shortcut-fe 2>/dev/null || true
+# wpad 默认切 mbedtls 版（体积更小，Kwrt 默认；WPA2/WPA3 个人版均支持）
+sed -i "s/wpad-openssl/wpad-mbedtls/g" target/linux/qualcommax/Makefile 2>/dev/null || true
 
 # --- 4. 克隆 Aurora 主题 ---
 echo "=== 克隆Aurora主题 ==="
